@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stripe Onboarding Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      background-color: #6772e5;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #556cd6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Stripe Onboarding Test</h1>
+    <p>Click the button below to start the onboarding process.</p>
+    <button id="onboardButton">Start Onboarding</button>
+  </div>
+
+  <script>
+    document.getElementById('onboardButton').addEventListener('click', async () => {
+      try {
+        // Send a request to your backend to get the account link
+        const response = await fetch('https://localhost:5000/create-connected-account', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ customerId: 'customer123' }) // Send any required data
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.url) {
+          // Redirect to the Stripe account onboarding link
+          window.location.href = data.url;
+        } else {
+          alert('Error starting onboarding: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('An error occurred. Please try again later.');
+      }
+    });
+  </script>
+</body>
+</html>
